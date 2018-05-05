@@ -8,7 +8,7 @@ This repository is a project to create BrainfuckInterpreter in as much programmi
 Language | Done
 ------------ | -------------
 Java | X
-C | X
+C | ✓
 C++ | X
 C# | X
 JavaScript | X
