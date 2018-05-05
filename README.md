@@ -16,6 +16,7 @@ Scratch | X
 Python | X
 Brainfuck | X
 PHP | X
+Ruby | ✓
 
 ## How to become part of it
 This Repository works like everything else. Take a language that isn't already finished, program the interpreter, put it into a seperate Directory, Labled as the Name of the Language and make a Pull Request.
