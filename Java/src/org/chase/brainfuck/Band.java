@@ -3,11 +3,16 @@ package org.chase.brainfuck;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 
 public class Band implements ListIterator<Integer> {
 
     private List<Integer> band = new ArrayList<>(100);
     private int currentIndex = 0;
+
+    public Band() {
+        band.add(0);
+    }
 
     @Override
     public boolean hasNext() {
@@ -73,5 +78,27 @@ public class Band implements ListIterator<Integer> {
 
     public int current() {
         return band.get(currentIndex);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Band band1 = (Band) o;
+        return currentIndex == band1.currentIndex &&
+                Objects.equals(band, band1.band);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(band, currentIndex);
+    }
+
+    @Override
+    public String toString() {
+        return "Band{\n" +
+                "band=" + band +
+                "\ncurrentIndex=" + currentIndex +
+                "}";
     }
 }
