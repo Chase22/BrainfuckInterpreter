@@ -19,7 +19,8 @@ public class Starter {
             try {
                 interpreter.interpretCode();
             } catch (Exception e1) {
-                interpreter.getBand().toString();
+                System.out.println(e1.getMessage());
+                System.out.println(interpreter);
             }
 
         } catch (FileNotFoundException e) {

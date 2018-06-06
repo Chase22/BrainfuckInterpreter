@@ -1,13 +1,12 @@
 package org.chase.brainfuck;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.text.CharacterIterator;
 import java.util.Scanner;
 
 public class BrainfuckInterpreter {
     private CodeIterator iterator;
-    private Band band = new Band();
+    private BandIterator bandIterator = new BandIterator();
 
     public BrainfuckInterpreter(String code) {
         iterator = new CodeIterator(code);
@@ -17,46 +16,58 @@ public class BrainfuckInterpreter {
         this(new Scanner(brainfuckFile).useDelimiter("\\A").next());
     }
 
-    public void interpretCode() {
+    public void interpretCode() throws IOException {
         char c = iterator.current();
         do {
             interpretChar(c);
         } while ((c = iterator.next()) !=CharacterIterator.DONE);
     }
 
-    public void interpretChar(char c) {
+    public void interpretChar(char c) throws IOException {
         switch (c) {
             case '+':
-                band.increment();
+                bandIterator.increment();
             break;
             case '-':
-                band.decrement();
+                bandIterator.decrement();
                 break;
             case '>':
-                band.next();
+                bandIterator.next();
                 break;
             case '<':
-                band.previous();
+                bandIterator.previous();
                 break;
             case '[':
-                if (band.current() == 0) {
-                    iterator.findNext(']');
+                if (bandIterator.current() == 0) {
+                    int index = iterator.findNext(']');
+                    if (index == -1) throw new BrainfuckException("No closing bracket found");
                 }
                 break;
             case ']':
-                if (band.current() != 0) {
-                    iterator.findPrevious('[');
+                if (bandIterator.current() != 0) {
+                    int index =iterator.findPrevious('[');
+                    if (index == -1) throw new BrainfuckException("No opening bracket found");
                 }
                 break;
             case ',':
+                bandIterator.set(new BufferedReader(new InputStreamReader(System.in)).read());
                 break;
             case'.':
-                 System.out.print((char) band.current());
+                 System.out.print((char) bandIterator.current());
+                 System.out.flush();
                 break;
         }
     }
 
-    public Band getBand() {
-        return band;
+    public BandIterator getBandIterator() {
+        return bandIterator;
+    }
+    public CodeIterator getIterator() {
+        return iterator;
+    }
+
+    @Override
+    public String toString() {
+        return "BrainfuckInterpreter={\n" + bandIterator + "\nCode=" + iterator +"\n}";
     }
 }

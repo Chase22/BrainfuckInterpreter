@@ -122,4 +122,22 @@ public class CodeIterator implements CharacterIterator {
             throw new InternalError(e);
         }
     }
+
+    @Override
+    public String toString() {
+        StringCharacterIterator copy = (StringCharacterIterator) internalIterator.clone();
+        copy.setIndex(copy.getBeginIndex());
+
+        String tostring = "";
+
+        char c;
+        while((c = copy.next()) != CharacterIterator.DONE) {
+            if (copy.getIndex() == internalIterator.getIndex()) {
+                tostring += "("+c+")";
+            } else {
+                tostring += c;
+            }
+        }
+        return tostring;
+    }
 }
