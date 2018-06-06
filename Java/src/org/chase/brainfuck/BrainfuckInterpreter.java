@@ -2,32 +2,26 @@ package org.chase.brainfuck;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.ListIterator;
-import java.util.PrimitiveIterator;
+import java.text.CharacterIterator;
 import java.util.Scanner;
 
 public class BrainfuckInterpreter {
-    static CodeIterator iterator;
-    static Band band = new Band();
+    private CodeIterator iterator;
+    private Band band = new Band();
 
-    public static void main(String[] args) {
-        if (args.length < 1) {
-            System.out.println("Not enough Arguments given. Expected 1");
-            return;
-        }
+    public BrainfuckInterpreter(String code) {
+        iterator = new CodeIterator(code);
+    }
 
-        File bfFile = new File(args[1]);
+    public BrainfuckInterpreter(File brainfuckFile) throws FileNotFoundException {
+        this(new Scanner(brainfuckFile).useDelimiter("\\A").next());
+    }
 
-        String code = "";
-
-        try {
-            code = new Scanner(bfFile).useDelimiter("\\A").next();
-        } catch (FileNotFoundException e) {
-            System.out.println("Could not find File " + args[1]);
-        }
-
-        CodeIterator iterator = new CodeIterator(code);
+    public void interpretCode() {
+        char c = iterator.current();
+        do {
+            interpretChar(c);
+        } while ((c = iterator.next()) !=CharacterIterator.DONE);
     }
 
     public void interpretChar(char c) {
@@ -44,6 +38,25 @@ public class BrainfuckInterpreter {
             case '<':
                 band.previous();
                 break;
+            case '[':
+                if (band.current() == 0) {
+                    iterator.findNext(']');
+                }
+                break;
+            case ']':
+                if (band.current() != 0) {
+                    iterator.findPrevious('[');
+                }
+                break;
+            case ',':
+                break;
+            case'.':
+                 System.out.print((char) band.current());
+                break;
         }
+    }
+
+    public Band getBand() {
+        return band;
     }
 }
